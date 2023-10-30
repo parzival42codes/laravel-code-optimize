@@ -1,0 +1,35 @@
+{
+    "name": "parzival42codes/laravel-code-optimize",
+    "description": "Resources",
+    "license": "MIT",
+    "require": {
+        "php": "^7.4|^8.0",
+        "guzzlehttp/guzzle": "^5.0|^6.0|^7.0",
+        "spatie/laravel-package-tools": "^1.9",
+        "spatie/php-structure-discoverer": "^1.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "parzival42codes\\LaravelCodeOptimize\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "parzival42codes\\LaravelCodeOptimize\\Tests\\": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "laravel": {
+            "providers": [
+              "parzival42codes\\LaravelCodeOptimize\\LaravelCodeOptimizeServiceProvider"
+            ]
+        }
+    }
+}
