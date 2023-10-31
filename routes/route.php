@@ -3,7 +3,7 @@
 namespace parzival42codes\LaravelCodeOptimize;
 
 use Illuminate\Support\Facades\Route;
-use parzival42codes\LaravelCodeOptimize\App\Http\Controllers\DashboardPhpInsightsController;
+use parzival42codes\LaravelCodeOptimize\App\Http\Controllers\DashboarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +18,6 @@ use parzival42codes\LaravelCodeOptimize\App\Http\Controllers\DashboardPhpInsight
 
 Route::middleware(['web', 'auth'])
     ->group(function () {
-        Route::get('code-optimize-phpinsights', [DashboardPhpInsightsController::class, 'index'])
-            ->name('code-version.dashboard');
+        Route::get('code-optimize', [DashboarController::class, 'index'])
+            ->name('code-optimize.dashboard');
     });

@@ -1,19 +1,15 @@
 <?php
 
-namespace parzival42codes\LaravelCodeOptimize\App\Http\Controllers;
+namespace parzival42codes\LaravelCodeOptimize\App\Services;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 
-class DashboardPhpInsightsController extends Controller
+class PhpInsights
 {
-    /**
-     * Show the application dashboard.
-     */
-    public function index(): Renderable
+    public function dispatch(): Renderable
     {
-
         $path = '/tmp/phpinsights.json';
 
         $phpInsightsContent = [
@@ -48,9 +44,8 @@ class DashboardPhpInsightsController extends Controller
             }
         }
 
-        d($phpInsightsTable);
-
-        return view('code-optimize::dashboardPhpInsights', compact([
+        return View::make('code-optimize::phpinsights', compact([
+            'phpInsightsSummary',
             'phpInsightsTable',
         ]));
     }
