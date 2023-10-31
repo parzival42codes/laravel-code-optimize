@@ -3,7 +3,7 @@
 namespace parzival42codes\LaravelCodeOptimize;
 
 use Illuminate\Support\Facades\Route;
-use parzival42codes\LaravelCodeOptimize\App\Http\Controllers\DashboarController;
+use parzival42codes\LaravelCodeOptimize\App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +18,6 @@ use parzival42codes\LaravelCodeOptimize\App\Http\Controllers\DashboarController;
 
 Route::middleware(['web', 'auth'])
     ->group(function () {
-        Route::get('code-optimize', [DashboarController::class, 'index'])
+        Route::get('code-optimize', [DashboardController::class, 'index'])
             ->name('code-optimize.dashboard');
     });

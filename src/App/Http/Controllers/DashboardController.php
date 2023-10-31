@@ -7,12 +7,13 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\App;
 use parzival42codes\LaravelCodeOptimize\App\Services\CodeVersionService;
 use parzival42codes\LaravelCodeOptimize\App\Services\Leasot;
+use parzival42codes\LaravelCodeOptimize\App\Services\PhpCsService;
 use parzival42codes\LaravelCodeOptimize\App\Services\PhpInsights;
 use parzival42codes\LaravelCodeOptimize\App\Services\PhpMd;
 use parzival42codes\LaravelCodeOptimize\App\Services\PhpStan;
 use parzival42codes\LaravelCodeOptimize\App\Services\Unittest;
 
-class DashboarController extends Controller
+class DashboardController extends Controller
 {
     /**
      * Show the application dashboard.
@@ -23,6 +24,7 @@ class DashboarController extends Controller
         $phpstan = App::make(PhpStan::class)->dispatch();
         $phpInsights = App::make(PhpInsights::class)->dispatch();
         $phpmd = App::make(PhpMd::class)->dispatch();
+        $phpcs = App::make(PhpCsService::class)->dispatch();
         $leasot = App::make(Leasot::class)->dispatch();
         $codeVersion = App::make(CodeVersionService::class)->dispatch();
 
