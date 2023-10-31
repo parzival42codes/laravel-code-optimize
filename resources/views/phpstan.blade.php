@@ -1,6 +1,4 @@
-@include('phpstan-view::header')
-
-<div id="phpstanView">
+<div id="phpstan">
 
     <div class="card">
         <div class="card-header">Zusammenfassung</div>
@@ -45,5 +43,3 @@
     @endforeach
 
 </div>
-
-@include('phpstan-view::footer')

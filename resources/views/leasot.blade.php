@@ -1,5 +1,3 @@
-@include('leasot-view::header')
-
 <div id="leasotView">
     @foreach ($leasotTags as $leasotTag => $leasotRef)
 
@@ -36,5 +34,3 @@
     @endforeach
 </div>
 
-
-@include('leasot-view::footer')

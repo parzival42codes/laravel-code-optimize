@@ -1,6 +1,4 @@
-@include('unittest-view::header')
-
-<div id="unittestView">
+<div id="unittest">
 
     <div class="card">
         <div class="card-body">
@@ -122,5 +120,3 @@
 
 
 </div>
-
-@include('unittest-view::footer')

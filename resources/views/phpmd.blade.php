@@ -1,5 +1,3 @@
-@include('phpmd-view::header')
-
 <div id="phpmdView">
 
     <div class="card">
@@ -75,4 +73,3 @@
 
 </div>
 
-@include('phpmd-view::footer')

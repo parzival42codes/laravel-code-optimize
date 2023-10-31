@@ -15,6 +15,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 
     <style>
+        .card {
+            margin: 1em 0;
+        }
+
+        .card .card-body{
+            padding: 0.4em;
+        }
+
         table {
             width: 100%;
             border: 1px black solid;
@@ -32,7 +40,10 @@
 
     </style>
 
+    @include('code-optimize::headerCssUnittest')
+    @include('code-optimize::headerCssPhpStan')
     @include('code-optimize::headerCssPhpInsights')
+    @include('code-optimize::headerCssCodeVersion')
 
 </head>
 
