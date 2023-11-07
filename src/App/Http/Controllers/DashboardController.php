@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\App;
 use parzival42codes\LaravelCodeOptimize\App\Services\CodeVersionService;
+use parzival42codes\LaravelCodeOptimize\App\Services\JobService;
 use parzival42codes\LaravelCodeOptimize\App\Services\Leasot;
 use parzival42codes\LaravelCodeOptimize\App\Services\PhpCsService;
 use parzival42codes\LaravelCodeOptimize\App\Services\PhpInsights;
@@ -26,14 +27,17 @@ class DashboardController extends Controller
         $phpmd = App::make(PhpMd::class)->dispatch();
         $phpcs = App::make(PhpCsService::class)->dispatch();
         $leasot = App::make(Leasot::class)->dispatch();
+        $jobs = App::make(JobService::class)->dispatch();
         $codeVersion = App::make(CodeVersionService::class)->dispatch();
 
         return view('code-optimize::dashboard', compact([
             'unittest',
             'phpstan',
             'phpmd',
+            'phpcs',
             'phpInsights',
             'leasot',
+            'jobs',
             'codeVersion',
         ]));
     }

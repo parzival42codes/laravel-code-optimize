@@ -17,6 +17,11 @@
         </button>
     </li>
     <li class="nav-item" role="presentation">
+        <button class="nav-link" id="phpcs-tab" data-bs-toggle="tab" data-bs-target="#phpcs" type="button"
+                role="tab" aria-controls="phpcs" aria-selected="true">PHPCS
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" id="phpInsights-tab" data-bs-toggle="tab" data-bs-target="#phpInsights" type="button"
                 role="tab" aria-controls="phpInsights" aria-selected="true">PHPInsights
         </button>
@@ -24,6 +29,11 @@
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="leasot-tab" data-bs-toggle="tab" data-bs-target="#leasot" type="button"
                 role="tab" aria-controls="leasot" aria-selected="false">Leasot
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="jobs-tab" data-bs-toggle="tab" data-bs-target="#jobs" type="button"
+                role="tab" aria-controls="jobs" aria-selected="false">Queue Jobs
         </button>
     </li>
     <li class="nav-item" role="presentation">
@@ -43,11 +53,17 @@
     <div class="tab-pane" id="phpmd" role="tabpanel" aria-labelledby="phpmd-tab">
         {!! $phpmd !!}
     </div>
+    <div class="tab-pane" id="phpcs" role="tabpanel" aria-labelledby="phpcs-tab">
+        {!! $phpcs !!}
+    </div>
     <div class="tab-pane" id="phpInsights" role="tabpanel" aria-labelledby="phpInsights-tab">
         {!! $phpInsights !!}
     </div>
     <div class="tab-pane" id="leasot" role="tabpanel" aria-labelledby="leasot-tab">
         {!! $leasot !!}
+    </div>
+    <div class="tab-pane" id="jobs" role="tabpanel" aria-labelledby="jobs-tab">
+        {!! $jobs !!}
     </div>
     <div class="tab-pane" id="codeVersion" role="tabpanel" aria-labelledby="codeVersion-tab">
         {!! $codeVersion !!}

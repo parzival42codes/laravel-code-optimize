@@ -12,19 +12,29 @@ class PhpCsService
     {
         $path = '/tmp/phpcs.json';
 
+        $phpcs = [
+            'totals' => [
+                'errors' => 0,
+                'warnings' => 0,
+                'fixable' => 0,
+            ],
+            'files' => [],
+        ];
+
         $storageDisk = Storage::disk('storage');
         if ($storageDisk->exists($path)) {
             $storageDiskContent = $storageDisk->get($path);
             if ($storageDiskContent) {
                 /** @var array $phpMdJson */
-                $phpCsJson = json_decode($storageDiskContent, true);
-
-                d($phpCsJson);
+                $phpcs = json_decode($storageDiskContent, true);
             }
         }
 
-        return View::make('code-optimize::phpcs', compact([
+        //        d($phpcs);
+        //        exit();
 
+        return View::make('code-optimize::phpcs', compact([
+            'phpcs',
         ]));
     }
 }
