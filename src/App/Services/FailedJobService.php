@@ -6,14 +6,16 @@ use DB;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\View;
 
-class JobService
+class FailedJobService
 {
     public function dispatch(): Renderable
     {
-        $jobs = DB::table('jobs')->get();
+        $failedJobs = DB::table('failed_jobs')->get();
 
-        return View::make('code-optimize::jobs', compact([
-            'jobs',
+        d($failedJobs);
+
+        return View::make('code-optimize::failedJobs', compact([
+            'failedJobs',
         ]));
     }
 }

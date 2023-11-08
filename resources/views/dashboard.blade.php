@@ -37,6 +37,11 @@
         </button>
     </li>
     <li class="nav-item" role="presentation">
+        <button class="nav-link" id="failedJobs-tab" data-bs-toggle="tab" data-bs-target="#failedJobs" type="button"
+                role="tab" aria-controls="failedJobs" aria-selected="false">Failed Queue Jobs
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" id="codeVersion-tab" data-bs-toggle="tab" data-bs-target="#codeVersion" type="button"
                 role="tab" aria-controls="codeVersion" aria-selected="false">Code Version
         </button>
@@ -64,6 +69,9 @@
     </div>
     <div class="tab-pane" id="jobs" role="tabpanel" aria-labelledby="jobs-tab">
         {!! $jobs !!}
+    </div>
+    <div class="tab-pane" id="failedJobs" role="tabpanel" aria-labelledby="failedJobs-tab">
+        ${!! $failedJobs !!}
     </div>
     <div class="tab-pane" id="codeVersion" role="tabpanel" aria-labelledby="codeVersion-tab">
         {!! $codeVersion !!}
