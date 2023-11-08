@@ -12,8 +12,6 @@ class FailedJobService
     {
         $failedJobs = DB::table('failed_jobs')->get();
 
-        d($failedJobs);
-
         return View::make('code-optimize::failedJobs', compact([
             'failedJobs',
         ]));
