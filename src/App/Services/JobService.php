@@ -10,7 +10,7 @@ class JobService
 {
     public function dispatch(): Renderable
     {
-        $jobs = DB::table('jobs')->get();
+        $jobs = DB::table('jobs')->orderByDesc('created_at')->get();
 
         return View::make('code-optimize::jobs', compact([
             'jobs',
