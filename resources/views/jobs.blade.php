@@ -1,4 +1,4 @@
-<div id="jobss">
+<div id="jobs">
 
     <div class="card">
         <div class="card-header">Queue Jobs</div>

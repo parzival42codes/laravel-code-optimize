@@ -71,7 +71,7 @@
         {!! $jobs !!}
     </div>
     <div class="tab-pane" id="failedJobs" role="tabpanel" aria-labelledby="failedJobs-tab">
-        ${!! $failedJobs !!}
+        {!! $failedJobs !!}
     </div>
     <div class="tab-pane" id="codeVersion" role="tabpanel" aria-labelledby="codeVersion-tab">
         {!! $codeVersion !!}
