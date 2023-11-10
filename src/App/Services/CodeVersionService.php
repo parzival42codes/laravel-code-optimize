@@ -14,7 +14,7 @@ class CodeVersionService
 
         /** @var array $versions */
         $versions = config('code-version.versions_required');
-        /** @var array $path */
+        /** @var array $configPaths */
         $configPaths = config('code-version.scan_path');
 
         $versionsTD = count($versions) * 3;

@@ -25,7 +25,7 @@ class PhpCsService
         if ($storageDisk->exists($path)) {
             $storageDiskContent = $storageDisk->get($path);
             if ($storageDiskContent) {
-                /** @var array $phpMdJson */
+                /** @var array $phpcs */
                 $phpcs = json_decode($storageDiskContent, true);
             }
         }

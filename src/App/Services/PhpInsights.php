@@ -30,12 +30,18 @@ class PhpInsights
 
         $storageDisk = Storage::disk('storage');
         if ($storageDisk->exists($path)) {
-            $phpInsightsContent = json_decode($storageDisk->get($path), true);
+            $contentFile = $storageDisk->get($path);
+            if ($contentFile) {
+                $content = json_decode($contentFile, true);
+                if ($content) {
+                    $phpInsightsContent = json_decode($content, true);
+                }
+            }
         }
 
         $phpInsightsTable = [];
 
-        $phpInsightsSummary = $phpInsightsContent['summary'];
+        $phpInsightsSummary = $phpInsightsContent['summary'] ?? null;
         unset($phpInsightsContent['summary']);
 
         foreach ($phpInsightsContent as $part => $phpInsight) {
