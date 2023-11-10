@@ -3,9 +3,9 @@
     <div class="card">
         <div class="card-header">Zusammenfassung</div>
         <div class="card-body" style="display:flex;">
-            <div style="flex: 1;">Errors: <strong>{{ $phpMdStats['errors'] ?? 0 }}</strong></div>
-            <div style="flex: 1;">Warnings: <strong>{{ $phpMdStats['warnings'] ?? 0 }}</strong></div>
-            <div style="flex: 1;">Fixable: <strong>{{ $phpMdStats['fixable'] ?? 0 }}</strong></div>
+            <div style="flex: 1;">Errors: <strong>{{ $phpcs['totals']['errors'] ?? 0 }}</strong></div>
+            <div style="flex: 1;">Warnings: <strong>{{ $phpcs['warnings'] ?? 0 }}</strong></div>
+            <div style="flex: 1;">Fixable: <strong>{{ $phpcs['totals']['fixable'] ?? 0 }}</strong></div>
         </div>
     </div>
 

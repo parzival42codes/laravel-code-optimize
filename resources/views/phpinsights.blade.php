@@ -1,8 +1,7 @@
 <div id="phpinsights">
-
-    @foreach($phpInsightsTable as $phpInsights)
+    @foreach($phpInsightsTable as $phpInsightsPart => $phpInsights)
         <div class="card">
-            <div class="card-header">Code: {{ $phpInsightsSummary['code'] }}</div>
+            <div class="card-header">{{ ucfirst($phpInsightsPart) }}: {{ $phpInsightsSummary[strtolower($phpInsightsPart)] ?? '' }}</div>
             <div class="card-body">
                 <table class="table table-striped table-hover">
                     <tr class="table-light">
