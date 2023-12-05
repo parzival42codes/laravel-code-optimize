@@ -44,10 +44,10 @@ class CodeVersionService
                         $versionToCompare = $matchVersion[1] ?? '';
 
                         $codeInfo['note'][$matchVersion[0]] = $matchVersion[2] ?? '';
-                        $codeInfo['version'][$matchVersion[0]] = $matchVersion[1].' / '.$versionToCompare;
+                        $codeInfo['version'][$matchVersion[0]] = $versionToCompare.' / '.$versionCurrent;
                         $codeInfo['versionCompare'][$matchVersion[0]] = version_compare(
-                            $versionCurrent,
-                            $versionToCompare
+                            $versionToCompare,
+                            $versionCurrent
                         );
                         $codeInfo['versionDoc'] = true;
 

@@ -11,7 +11,6 @@
                 </tr>
 
                 @foreach ($codeData as $code)
-
                     @if ($code['versionDoc'])
                         <tr>
                             <td>{{ $code['discover'] }}</td>
@@ -20,7 +19,7 @@
                                     @if (!empty($code['note'][$versionKey]))
                                         ({{ $code['note'][$versionKey] }})
                                     @endisset</td>
-                                <td>{{ $version }}</td>
+                                <td>{{ $code['version'][$versionKey] ?? '' }}</td>
                                 <td class="versionCompare">
                                     @isset($code['versionCompare'][$versionKey])
                                         @if ($code['versionCompare'][$versionKey] === -1)
