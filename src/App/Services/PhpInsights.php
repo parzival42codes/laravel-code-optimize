@@ -34,6 +34,7 @@ class PhpInsights
             if ($contentFile) {
                 $content = json_decode($contentFile, true);
                 if ($content) {
+                    /** @var array $phpInsightsContent */
                     $phpInsightsContent = $content;
                 }
             }
