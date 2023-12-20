@@ -48,7 +48,6 @@ class CodeVersionScanService
                         $codeInfo['versionDoc'] = true;
 
                         $this->codeInfoCollection[$discover] = $codeInfo;
-
                     }
                 } else {
                     $codeInfo['note'] = null;

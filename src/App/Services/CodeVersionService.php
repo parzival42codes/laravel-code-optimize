@@ -52,7 +52,6 @@ class CodeVersionService
                         $codeInfo['versionDoc'] = true;
 
                         $codeData[$discover] = $codeInfo;
-
                     }
                 } else {
                     $codeInfo['note'] = null;
