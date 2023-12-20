@@ -22,16 +22,15 @@ class PhpCsService
         ];
 
         $storageDisk = Storage::disk('storage');
+
         if ($storageDisk->exists($path)) {
             $storageDiskContent = $storageDisk->get($path);
+
             if ($storageDiskContent) {
                 /** @var array $phpcs */
                 $phpcs = json_decode($storageDiskContent, true);
             }
         }
-
-        //        d($phpcs);
-        //        exit();
 
         return View::make('code-optimize::phpcs', compact([
             'phpcs',
