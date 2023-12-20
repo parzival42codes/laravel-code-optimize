@@ -1,5 +1,5 @@
 <div id="phpinsights">
-    @foreach($phpInsightsTable as $phpInsightsPart => $phpInsights)
+    @foreach ($phpInsightsTable as $phpInsightsPart => $phpInsights)
         <div class="card">
             <div class="card-header">{{ ucfirst($phpInsightsPart) }}: {{ $phpInsightsSummary[strtolower($phpInsightsPart)] ?? '' }}</div>
             <div class="card-body">
@@ -11,7 +11,7 @@
                         <th>File</th>
                         <th>Line</th>
                     </tr>
-                    @foreach($phpInsights as $insight)
+                    @foreach ($phpInsights as $insight)
                         <tr>
                             <td>{{ $insight['title'] ?? '' }}</td>
                             <td>{{ $insight['message'] ?? '' }}</td>

@@ -28,7 +28,7 @@
                 </tr>
 
                 @foreach ($phpcs['files'] as $phpcsFile => $phpcsData)
-                    @if($phpcsData['errors'] || $phpcsData['warnings'] || $phpcsData['messages'])
+                    @if ($phpcsData['errors'] || $phpcsData['warnings'] || $phpcsData['messages'])
 
                         <tr>
                             <td>
@@ -41,7 +41,7 @@
                                 {{ $phpcsData['warnings'] }}
                             </td>
                             <td>
-                                @if($phpcsData['messages'])
+                                @if ($phpcsData['messages'])
                                     <table class="table table-striped table-hover">
                                         <tr>
                                             <th>Message:</th>
@@ -52,7 +52,7 @@
                                             <th>Line:</th>
                                             <th>Column:</th>
                                         </tr>
-                                    @foreach($phpcsData['messages'] as $message)
+                                    @foreach ($phpcsData['messages'] as $message)
                                             <tr>
                                                 <td>{{ $message['message'] }}</td>
                                                 <td>{{ $message['source'] }}</td>

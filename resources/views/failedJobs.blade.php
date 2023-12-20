@@ -11,7 +11,7 @@
                     <th style="width: 35%;">Exception</th>
                     <th style="width: 10%;">Failed At</th>
                 </tr>
-                @foreach($failedJobs as $failedJob)
+                @foreach ($failedJobs as $failedJob)
                     @php
                         $payload = json_decode($failedJob->payload);
                         $command = unserialize($payload->data->command);

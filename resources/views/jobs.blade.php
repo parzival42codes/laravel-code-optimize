@@ -13,7 +13,7 @@
                     <th style="width: 10%;">Available</th>
                     <th style="width: 10%;">Created</th>
                 </tr>
-                @foreach($jobs as $job)
+                @foreach ($jobs as $job)
                     <tr>
                         @php
                             $payload = json_decode($job->payload);
