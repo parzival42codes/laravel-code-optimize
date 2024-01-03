@@ -16,15 +16,24 @@
                 @foreach ($jobs as $job)
                     <tr>
                         @php
+                            $data = '';
+
                             $payload = json_decode($job->payload);
                             $command = unserialize($payload->data->command);
-                            $property = new ReflectionProperty(get_class($command), 'data');
-                            $data = $property->getValue($command);
+
+                            if (property_exists($command,'data')) {
+                                $property = new ReflectionProperty(get_class($command), 'data');
+                                $data = $property->getValue($command);
+                            }
                         @endphp
                         <td>{{ $job->queue }}</td>
                         <td>{{ $job->attempts }}</td>
                         <td>{{ $payload->displayName }}</td>
-                        <td><details><summary>Payload</summary><code style="word-break: break-word;">{{ var_export($data,true) }}</code></details></td>
+                        <td>
+                            <details>
+                                <summary>Payload</summary>
+                                <code style="word-break: break-word;">{{ var_export($data,true) }}</code></details>
+                        </td>
                         <td>{{ date('Y-m-d H:i:s',$job->reserved_at) }}</td>
                         <td>{{ date('Y-m-d H:i:s',$job->available_at) }}</td>
                         <td>{{ date('Y-m-d H:i:s',$job->created_at) }}</td>
