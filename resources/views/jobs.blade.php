@@ -16,15 +16,15 @@
                 @foreach ($jobs as $job)
                     <tr>
                         @php
-                            $data = '';
-
                             $payload = json_decode($job->payload);
-                            $command = unserialize($payload->data->command);
+                            $data = rescue(function () {
+                                $command = unserialize($payload->data->command);
 
-                            if (property_exists($command,'data')) {
                                 $property = new ReflectionProperty(get_class($command), 'data');
-                                $data = $property->getValue($command);
-                            }
+                                    return $property->getValue($command);
+                                        }, function () {
+                                            return '';
+                                        },false);
                         @endphp
                         <td>{{ $job->queue }}</td>
                         <td>{{ $job->attempts }}</td>
