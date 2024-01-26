@@ -112,11 +112,13 @@ class Unittest
         $attributes['error'] = $testcaseItem['error'] ?? '';
         $attributes['failure'] = $testcaseItem['failure'] ?? '';
 
-        if (str_contains($attributes['class'], 'Tests\Unit')) {
-            $attributes['name'] = $attributes['class'].'\\'.$attributes['name'];
-            $attributes['class'] = 'Unit';
-        }
+        if (isset($attributes['class'])) {
+            $this->unitTestTable[$attributes['class']][$attributes['name']] = $attributes;
 
-        $this->unitTestTable[$attributes['class']][$attributes['name']] = $attributes;
+            if (str_contains($attributes['class'], 'Tests\Unit')) {
+                $attributes['name'] = $attributes['class'].'\\'.$attributes['name'];
+                $attributes['class'] = 'Unit';
+            }
+        }
     }
 }
