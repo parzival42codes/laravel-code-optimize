@@ -27,6 +27,11 @@
         </button>
     </li>
     <li class="nav-item" role="presentation">
+        <button class="nav-link" id="enlightn-tab" data-bs-toggle="tab" data-bs-target="#enlightn" type="button"
+                role="tab" aria-controls="enlightn" aria-selected="true">Enlightn
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" id="leasot-tab" data-bs-toggle="tab" data-bs-target="#leasot" type="button"
                 role="tab" aria-controls="leasot" aria-selected="false">Leasot
         </button>
@@ -63,6 +68,9 @@
     </div>
     <div class="tab-pane" id="phpInsights" role="tabpanel" aria-labelledby="phpInsights-tab">
         {!! $phpInsights !!}
+    </div>
+    <div class="tab-pane" id="enlightn" role="tabpanel" aria-labelledby="enlightn-tab">
+        {!! $enlightn !!}
     </div>
     <div class="tab-pane" id="leasot" role="tabpanel" aria-labelledby="leasot-tab">
         {!! $leasot !!}

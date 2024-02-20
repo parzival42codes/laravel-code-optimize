@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\App;
 use parzival42codes\LaravelCodeOptimize\App\Services\CodeVersionService;
+use parzival42codes\LaravelCodeOptimize\App\Services\EnlightnService;
 use parzival42codes\LaravelCodeOptimize\App\Services\FailedJobService;
 use parzival42codes\LaravelCodeOptimize\App\Services\JobService;
 use parzival42codes\LaravelCodeOptimize\App\Services\Leasot;
@@ -27,6 +28,7 @@ class DashboardController extends Controller
         $phpInsights = App::make(PhpInsights::class)->dispatch();
         $phpmd = App::make(PhpMd::class)->dispatch();
         $phpcs = App::make(PhpCsService::class)->dispatch();
+        $enlightn = App::make(EnlightnService::class)->dispatch();
         $leasot = App::make(Leasot::class)->dispatch();
         $jobs = App::make(JobService::class)->dispatch();
         $failedJobs = App::make(FailedJobService::class)->dispatch();
@@ -38,6 +40,7 @@ class DashboardController extends Controller
             'phpmd',
             'phpcs',
             'phpInsights',
+            'enlightn',
             'leasot',
             'jobs',
             'failedJobs',
