@@ -19,11 +19,11 @@
                         </td>
                         <td>
                             <div style="color:
-                            @if($enlightn['status'] == 'Not Applicable')
+                            @if ($enlightn['status'] == 'Not Applicable')
                                 blue
-                            @elseif($enlightn['status'] == 'Passed')
+                            @elseif ($enlightn['status'] == 'Passed')
                                 green
-                            @elseif($enlightn['status'] == 'Failed')
+                            @elseif ($enlightn['status'] == 'Failed')
                                 red
                             @endif
                             "> {{ $enlightn['status'] }} </div>
