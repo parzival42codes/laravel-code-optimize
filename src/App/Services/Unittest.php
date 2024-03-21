@@ -77,22 +77,36 @@ class Unittest
     private function testSuit(array $testsuite): void
     {
         foreach ($testsuite as $testsuiteEntry) {
-            if (isset($testsuiteEntry['@attributes'])) {
-                $this->unitTestSuits[$testsuiteEntry['@attributes']['name']] = $testsuiteEntry['@attributes'];
-            }
-
-            if (isset($testsuiteEntry['testsuite'])) {
-                $this->testSuit($testsuiteEntry['testsuite']);
-            }
-
-            if (isset($testsuiteEntry['testcase'])) {
-                $this->testCase($testsuiteEntry['testcase']);
-            }
-
-            if (isset($testsuiteEntry['tests'])) {
-                $this->testCaseItem(['@attributes' => $testsuiteEntry]);
-            }
+            $this->testSuitEntry($testsuiteEntry);
         }
+    }
+
+    private function testSuitEntry(array|string $testsuiteEntry): void
+    {
+        if (is_string($testsuiteEntry)) {
+            return;
+        }
+
+        if (isset($testsuiteEntry['@attributes'])) {
+            $this->unitTestSuits[$testsuiteEntry['@attributes']['name']] = $testsuiteEntry['@attributes'];
+        }
+
+        if (isset($testsuiteEntry['testsuite'])) {
+            $this->testSuit($testsuiteEntry['testsuite']);
+        }
+
+        if (isset($testsuiteEntry['testcase'])) {
+            $this->testCase($testsuiteEntry['testcase']);
+        }
+
+        if (isset($testsuiteEntry['tests'])) {
+            $this->testCaseItem(['@attributes' => $testsuiteEntry]);
+        }
+
+        if (is_array($testsuiteEntry)) {
+            $this->testSuit($testsuiteEntry);
+        }
+
     }
 
     private function testCase(array $testcase): void
