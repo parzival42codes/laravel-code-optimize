@@ -106,7 +106,6 @@ class Unittest
         if (is_array($testsuiteEntry)) {
             $this->testSuit($testsuiteEntry);
         }
-
     }
 
     private function testCase(array $testcase): void
