@@ -1,7 +1,5 @@
 <?php
 
-use Okipa\LaravelTable\Abstracts\AbstractTableConfiguration;
-
 return [
 
     /*
@@ -25,7 +23,6 @@ return [
      */
     'scan_class' => [
         'App\Http\Controllers\Controller',
-        AbstractTableConfiguration::class,
     ],
 
 ];
