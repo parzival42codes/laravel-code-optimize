@@ -5,6 +5,7 @@ namespace parzival42codes\LaravelCodeOptimize\App\Services;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Throwable;
 
 class Unittest
 {
@@ -12,51 +13,53 @@ class Unittest
 
     private array $unitTestSuits = [];
 
+    private array $testStats = [
+        'name' => 0,
+        'tests' => 0,
+        'assertions' => 0,
+        'errors' => 0,
+        'failures' => 0,
+        'skipped' => 0,
+        'time' => 0,
+    ];
+
     public function dispatch(): Renderable
     {
-        $path = '/tmp/unittest.xml';
+        $unitTestSuits = rescue(function () {
+            $path = '/tmp/unittest.xml';
 
-        $testStats = [
-            'name' => 0,
-            'tests' => 0,
-            'assertions' => 0,
-            'errors' => 0,
-            'failures' => 0,
-            'skipped' => 0,
-            'time' => 0,
-        ];
+            $storageDisk = Storage::disk('storage');
+            if ($storageDisk->exists($path)) {
+                $storageDiskContent = $storageDisk->get($path);
+                if ($storageDiskContent) {
+                    $xml = simplexml_load_string($storageDiskContent);
+                    if ($xml) {
+                        $json = json_encode($xml);
+                        if ($json) {
+                            if (! json_last_error()) {
+                                /** @var array $testArray */
+                                $testArray = json_decode($json, true);
 
-        $storageDisk = Storage::disk('storage');
-        if ($storageDisk->exists($path)) {
-            $storageDiskContent = $storageDisk->get($path);
-            if ($storageDiskContent) {
-                $xml = simplexml_load_string($storageDiskContent);
-                if ($xml) {
-                    $json = json_encode($xml);
-                    if ($json) {
-                        if (! json_last_error()) {
-                            /** @var array $testArray */
-                            $testArray = json_decode($json, true);
+                                if ($testArray) {
+                                    /** @var array $testSuite1 */
+                                    $testSuite1 = $testArray['testsuite'];
 
-                            if ($testArray) {
-                                /** @var array $testSuite1 */
-                                $testSuite1 = $testArray['testsuite'];
+                                    $this->testStats = [
+                                        'name' => $testSuite1['@attributes']['name'],
+                                        'tests' => $testSuite1['@attributes']['tests'],
+                                        'assertions' => $testSuite1['@attributes']['assertions'],
+                                        'errors' => $testSuite1['@attributes']['errors'],
+                                        'failures' => $testSuite1['@attributes']['failures'],
+                                        'skipped' => $testSuite1['@attributes']['skipped'],
+                                        'time' => $testSuite1['@attributes']['time'],
+                                    ];
 
-                                $testStats = [
-                                    'name' => $testSuite1['@attributes']['name'],
-                                    'tests' => $testSuite1['@attributes']['tests'],
-                                    'assertions' => $testSuite1['@attributes']['assertions'],
-                                    'errors' => $testSuite1['@attributes']['errors'],
-                                    'failures' => $testSuite1['@attributes']['failures'],
-                                    'skipped' => $testSuite1['@attributes']['skipped'],
-                                    'time' => $testSuite1['@attributes']['time'],
-                                ];
+                                    $this->testSuit($testSuite1['testsuite']);
 
-                                $this->testSuit($testSuite1['testsuite']);
-
-                                foreach ($this->unitTestSuits as $unitTestKey => $unitTestSuit) {
-                                    if (isset($this->unitTestTable[$unitTestKey])) {
-                                        $this->unitTestSuits[$unitTestKey]['entries'] = $this->unitTestTable[$unitTestKey];
+                                    foreach ($this->unitTestSuits as $unitTestKey => $unitTestSuit) {
+                                        if (isset($this->unitTestTable[$unitTestKey])) {
+                                            $this->unitTestSuits[$unitTestKey]['entries'] = $this->unitTestTable[$unitTestKey];
+                                        }
                                     }
                                 }
                             }
@@ -64,9 +67,13 @@ class Unittest
                     }
                 }
             }
-        }
 
-        $unitTestSuits = $this->unitTestSuits;
+            return $this->unitTestSuits;
+        }, function (Throwable $throwable) {
+            return [];
+        });
+
+        $testStats = $this->testStats;
 
         return View::make('code-optimize::unittest', compact([
             'unitTestSuits',
