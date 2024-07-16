@@ -1,22 +1,21 @@
 <style>
 
-    .unittestContainer {
-        display: flex;
-    }
-
-    .unittestContainer .unittestContainer--item {
-        flex: 1;
-    }
-
-    .unittestContainer .unittestContainer--item.unittestContainer--item-time {
-        white-space: nowrap;
-    }
-
-    .unittestContainer .unittestContainer--item .unittestContainer--item--value {
+    #unittestContainer .table-summary tbody td {
         font-weight: bold;
     }
 
-    .unitTestSuit--entry-time {
-        white-space: nowrap;
+    #unittestContainer .unitTestSuit--collect-row {
+       white-space: nowrap;
+        text-align: center;
+        font-weight: bold;
     }
+
+    #unittestContainer .unitTestSuit--entry-name {
+       white-space: nowrap;
+    }
+
+    #unittestContainer .unitTestSuit--entry-time {
+       white-space: nowrap;
+    }
+
 </style>

@@ -14,7 +14,7 @@ class Unittest
     private array $unitTestSuits = [];
 
     private array $testStats = [
-        'name' => 0,
+        'name' => '',
         'tests' => 0,
         'assertions' => 0,
         'errors' => 0,
@@ -29,44 +29,56 @@ class Unittest
             $path = '/tmp/unittest.xml';
 
             $storageDisk = Storage::disk('storage');
+
             if ($storageDisk->exists($path)) {
                 $storageDiskContent = $storageDisk->get($path);
                 if ($storageDiskContent) {
                     $xml = simplexml_load_string($storageDiskContent);
                     if ($xml) {
                         $json = json_encode($xml);
+
                         if ($json) {
                             if (! json_last_error()) {
                                 /** @var array $testArray */
                                 $testArray = json_decode($json, true);
 
+                                d($testArray);
+
                                 if ($testArray) {
                                     /** @var array $testSuite1 */
                                     $testSuite1 = $testArray['testsuite'];
 
-                                    $this->testStats = [
-                                        'name' => $testSuite1['@attributes']['name'],
-                                        'tests' => $testSuite1['@attributes']['tests'],
-                                        'assertions' => $testSuite1['@attributes']['assertions'],
-                                        'errors' => $testSuite1['@attributes']['errors'],
-                                        'failures' => $testSuite1['@attributes']['failures'],
-                                        'skipped' => $testSuite1['@attributes']['skipped'],
-                                        'time' => $testSuite1['@attributes']['time'],
-                                    ];
+                                    d($testSuite1['testsuite']);
 
-                                    $this->testSuit($testSuite1['testsuite']);
+                                    foreach ($testSuite1['testsuite'] as $testsuite) {
+                                        if (isset($testsuite['@attributes'])) {
+                                            $this->testStats = [
+                                                'name' => $this->testStats['name'].' / '.$testsuite['@attributes']['name'],
+                                                'tests' => $this->testStats['tests'] + $testsuite['@attributes']['tests'] ?? 0,
+                                                'assertions' => $this->testStats['assertions'] + $testsuite['@attributes']['assertions'] ?? 0,
+                                                'errors' => $this->testStats['errors'] + $testsuite['@attributes']['errors'] ?? 0,
+                                                'failures' => $this->testStats['failures'] + $testsuite['@attributes']['failures'] ?? 0,
+                                                'skipped' => $this->testStats['skipped'] + $testsuite['@attributes']['skipped'] ?? 0,
+                                                'time' => $this->testStats['time'] + $testsuite['@attributes']['time'] ?? 0,
+                                            ];
 
-                                    foreach ($this->unitTestSuits as $unitTestKey => $unitTestSuit) {
-                                        if (isset($this->unitTestTable[$unitTestKey])) {
-                                            $this->unitTestSuits[$unitTestKey]['entries'] = $this->unitTestTable[$unitTestKey];
+                                            if (isset($testsuite['testsuite']['testcase'])) {
+                                                $this->testcase($testsuite);
+                                            } else {
+                                                $this->testsuite($testsuite);
+                                            }
                                         }
                                     }
+
+                                    $this->singleTestsuite($testSuite1);
                                 }
                             }
                         }
                     }
                 }
             }
+
+            d($this->unitTestSuits);
 
             return $this->unitTestSuits;
         }, function (Throwable $throwable) {
@@ -81,64 +93,127 @@ class Unittest
         ]));
     }
 
-    private function testSuit(array $testsuite): void
+    private function testsuite(array $testsuite)
     {
-        foreach ($testsuite as $testsuiteEntry) {
-            $this->testSuitEntry($testsuiteEntry);
-        }
-    }
+        $name = $testsuite['@attributes']['name'];
 
-    private function testSuitEntry(array|string $testsuiteEntry): void
-    {
-        if (is_string($testsuiteEntry)) {
-            return;
-        }
+        $this->unitTestSuits[$name] = $testsuite['@attributes'];
 
-        if (isset($testsuiteEntry['@attributes'])) {
-            $this->unitTestSuits[$testsuiteEntry['@attributes']['name']] = $testsuiteEntry['@attributes'];
-        }
+        if (isset($testsuite['testsuite'])) {
+            foreach ($testsuite['testsuite'] as $testsuiteItem) {
+                $this->checkCollect($name);
 
-        if (isset($testsuiteEntry['testsuite'])) {
-            $this->testSuit($testsuiteEntry['testsuite']);
-        }
+                if (! isset($this->unitTestSuits[$name])) {
+                    $this->unitTestSuits[$name] = [];
+                }
 
-        if (isset($testsuiteEntry['testcase'])) {
-            $this->testCase($testsuiteEntry['testcase']);
-        }
+                if (isset($testsuiteItem['testcase']['@attributes'])) {
+                    $class = $testsuiteItem['testcase']['@attributes']['class'];
+                    $this->checkClass($name, $class);
 
-        if (isset($testsuiteEntry['tests'])) {
-            $this->testCaseItem(['@attributes' => $testsuiteEntry]);
-        }
+                    $this->unitTestSuits[$name]['collect'][$class]['entries'][] = array_merge($testsuiteItem['testcase']['@attributes'],
+                        [
+                            'error' => $testsuiteItem['testcase']['error'] ?? '',
+                            'failure' => $testsuiteItem['testcase']['failure'] ?? '',
+                        ]);
+                } else {
+                    if (isset($testsuiteItem['@attributes']['name'])) {
+                        $class = $testsuiteItem['@attributes']['name'];
+                        $this->checkClass($name, $class);
 
-        if (is_array($testsuiteEntry)) {
-            $this->testSuit($testsuiteEntry);
-        }
-    }
-
-    private function testCase(array $testcase): void
-    {
-        if (isset($testcase['@attributes'])) {
-            $this->testCaseItem($testcase);
-        } else {
-            foreach ($testcase as $testcaseItem) {
-                $this->testCaseItem($testcaseItem);
+                        $this->unitTestSuits[$name]['collect'][$class] = $testsuiteItem['@attributes'];
+                        $this->unitTestSuits[$name]['collect'][$class]['entries'] = [];
+                        if (isset($testsuiteItem['testcase'])) {
+                            foreach ($testsuiteItem['testcase'] as $testCase) {
+                                if (isset($testCase['@attributes'])) {
+                                    $this->unitTestSuits[$name]['collect'][$class]['entries'][] = array_merge($testCase['@attributes'],
+                                        [
+                                            'error' => $testCase['error'] ?? '',
+                                            'failure' => $testCase['failure'] ?? '',
+                                        ]);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 
-    private function testCaseItem(array $testcaseItem): void
+    private function testcase(array $testcase)
     {
-        $attributes = $testcaseItem['@attributes'];
-        $attributes['error'] = $testcaseItem['error'] ?? '';
-        $attributes['failure'] = $testcaseItem['failure'] ?? '';
+        $name = $testcase['@attributes']['name'];
 
-        if (isset($attributes['class'])) {
-            $this->unitTestTable[$attributes['class']][$attributes['name']] = $attributes;
+        $this->unitTestSuits[$name] = $testcase['@attributes'];
+        $this->unitTestSuits[$name]['collect'] = [];
 
-            if (str_contains($attributes['class'], 'Tests\Unit')) {
-                $attributes['name'] = $attributes['class'].'\\'.$attributes['name'];
-                $attributes['class'] = 'Unit';
+        $class = $testcase['testsuite']['@attributes']['name'];
+        $this->checkClass($name, $class);
+
+        $this->unitTestSuits[$name]['collect'][$class] = $testcase['testsuite']['@attributes'];
+        $this->unitTestSuits[$name]['collect'][$class]['entries'] = [];
+
+        foreach ($testcase['testsuite']['testcase'] as $testsuite) {
+            $this->unitTestSuits[$name]['collect'][$class]['entries'][] = array_merge($testsuite['@attributes'], [
+                'error' => $testsuite['error'] ?? '',
+                'failure' => $testsuite['failure'] ?? '',
+            ]);
+        }
+    }
+
+    private function singleTestsuite(array $testsuite)
+    {
+        $this->testStats = [
+            'name' => $testsuite['testsuite']['@attributes']['name'],
+            'tests' => $testsuite['testsuite']['@attributes']['tests'],
+            'assertions' => $testsuite['testsuite']['@attributes']['assertions'],
+            'errors' => $testsuite['testsuite']['@attributes']['errors'],
+            'failures' => $testsuite['testsuite']['@attributes']['failures'],
+            'skipped' => $testsuite['testsuite']['@attributes']['skipped'],
+            'time' => $testsuite['testsuite']['@attributes']['time'],
+        ];
+
+        $name = $testsuite['testsuite']['@attributes']['name'];
+
+        $this->unitTestSuits[$name] = $testsuite['@attributes'];
+        $this->unitTestSuits[$name]['collect'] = [];
+
+        d($testsuite);
+
+        foreach ($testsuite['testsuite']['testsuite'] as $testsuiteItem) {
+            $class = $testsuiteItem['@attributes']['name'];
+            $this->checkClass($name, $class);
+
+            $this->unitTestSuits[$name]['collect'][$class] = $testsuiteItem['@attributes'];
+            $this->unitTestSuits[$name]['collect'][$class]['entries'] = [];
+
+            if (isset($testsuiteItem['testcase'])) {
+                foreach ($testsuiteItem['testcase'] as $testsuiteValue) {
+                    if (isset($testsuiteValue['@attributes'])) {
+                        $this->unitTestSuits[$name]['collect'][$class]['entries'][] = array_merge($testsuiteValue['@attributes'],
+                            [
+                                'error' => $testsuiteValue['error'] ?? '',
+                                'failure' => $testsuiteValue['failure'] ?? '',
+                            ]);
+                    }
+                }
             }
+        }
+
+        d($this->unitTestSuits);
+    }
+
+    private function checkCollect(string $name)
+    {
+        if (! isset($this->unitTestSuits[$name]['collect'])) {
+            $this->unitTestSuits[$name]['collect'] = [];
+        }
+    }
+
+    private function checkClass(string $name, string $class)
+    {
+        if (! isset($this->unitTestSuits[$name]['collect'][$class])) {
+            $this->unitTestSuits[$name]['collect'][$class] = [];
         }
     }
 }

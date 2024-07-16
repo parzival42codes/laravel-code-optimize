@@ -1,8 +1,8 @@
-<div id="unittest">
+<div id="unittestContainer">
 
     <div class="card">
         <div class="card-body">
-            <table class="table table-striped table-hover">
+            <table class="table table-summary table-striped table-hover">
                 <tr class="table-light">
                     <th>
                         Name
@@ -53,70 +53,61 @@
         </div>
     </div>
 
-    @foreach ($unitTestSuits as $unitTestSuit)
-
-        @isset($unitTestSuit['entries'])
-
-            <div class="card">
-                <div class="card-header text-center extendedException-title">
-                    {{ $unitTestSuit['name'] }}
-                </div>
-
-                <div class="card-body">
-
-
-                    <div class="unittestContainer">
-                        <div class="unittestContainer--item unittestContainer--item-test">Tests: <span
-                                class="unittestContainer--item--value">{{ $unitTestSuit['tests'] }}</span></div>
-                        <div
-                            class="unittestContainer--item unittestContainer--item-assertions">Assertions: <span
-                                class="unittestContainer--item--value">{{ $unitTestSuit['assertions'] }}</span></div>
-                        <div
-                            class="unittestContainer--item unittestContainer--item-errors">Errors: <span
-                                class="unittestContainer--item--value" @if ($unitTestSuit['errors'] > 0) style="color: red;" @endif>{{ $unitTestSuit['errors'] }}</span></div>
-                        <div
-                            class="unittestContainer--item unittestContainer--item-failures">Failures: <span
-                                class="unittestContainer--item--value" @if ($unitTestSuit['failures'] > 0) style="color: red;" @endif>{{ $unitTestSuit['failures'] }}</span></div>
-                        <div
-                            class="unittestContainer--item unittestContainer--item-skipped">Skipped: <span
-                                class="unittestContainer--item--value">{{ $unitTestSuit['skipped'] }}</span></div>
-                        <div
-                            class="unittestContainer--item unittestContainer--item-time">Time: <span
-                                class="unittestContainer--item--value">{{ round($unitTestSuit['time'],2) }} sec.</span>
-                        </div>
-                    </div>
-
-                    <table class="table table-striped table-hover">
-                        <tr class="table-light">
-                            <th>Name</th>
-                            <th>Assertions</th>
-                            <th>Error</th>
-                            <th>Failure</th>
-                            <th>Time</th>
-                        </tr>
-
-                        @isset($unitTestSuit['entries'])
-
-                            @foreach ($unitTestSuit['entries'] as $entry )
-
-                                <tr>
-                                    <td class="unitTestSuit--entry-name">{{ $entry['name'] }}</td>
-                                    <td class="unitTestSuit--entry-assertions">{{ $entry['assertions'] }}</td>
-                                    <td class="unitTestSuit--entry-error">{{ $entry['error'] }}</td>
-                                    <td class="unitTestSuit--entry-failure">{{ $entry['failure'] }}</td>
-                                    <td class="unitTestSuit--entry-time">{{ round($entry['time'],2) }} sec.</td>
-                                </tr>
-
-                            @endforeach
-
-                        @endisset
-                    </table>
+    @foreach($unitTestSuits as $unitTestSuitName => $unitTestSuit)
+        <div class="card">
+            <div class="card-header text-center">
+                <h2>{{ $unitTestSuitName }}</h2>
+                <div style="font-size: small">
+                    Tests: <b>{{ $unitTestSuit['tests'] }}</b>
+                    Assertions: <b>{{ $unitTestSuit['assertions'] }}</b>
+                    Errors: <b @if($unitTestSuit['errors']) style="color: red;" @endif>{{ $unitTestSuit['errors'] }}</b>
+                    Failures: <b
+                        @if($unitTestSuit['failures']) style="color: red;" @endif>{{ $unitTestSuit['failures'] }}</b>
+                    Skipped: <b>{{ $unitTestSuit['skipped'] }}</b>
+                    Time: <b>{{ round($unitTestSuit['time'],2) }}</b>
                 </div>
             </div>
 
-        @endisset
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <tr class="table-light">
+                        <th>Name</th>
+                        <th>Assertions</th>
+                        <th>Error</th>
+                        <th>Failure</th>
+                        <th>Time</th>
+                    </tr>
+
+                    @php
+                        $collectKeyLast = '';
+                    @endphp
+
+                    @foreach($unitTestSuit['collect'] as $collectKey => $collect)
+
+                        @if($collectKey != $collectKeyLast)
+                            <tr>
+                                <td colspan="5" class="unitTestSuit--collect-row">{{ $collectKey }}</td>
+                            </tr>
+                            @php
+                                $collectKeyLast = $collectKey;
+                            @endphp
+                        @endif
+
+                        @foreach($collect['entries'] as $entry)
+                            <tr>
+                                <td class="unitTestSuit--entry-name">{{ $entry['name'] }}</td>
+                                <td class="unitTestSuit--entry-assertions">{{ $entry['assertions'] }}</td>
+                                <td class="unitTestSuit--entry-error">{{ $entry['error'] ?? '?' }}</td>
+                                <td class="unitTestSuit--entry-failure">{{ $entry['failure'] ?? '?' }}</td>
+                                <td class="unitTestSuit--entry-time">{{ round($entry['time'],2) }} sec.</td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+
+                </table>
+            </div>
+        </div>
 
     @endforeach
-
 
 </div>
