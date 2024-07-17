@@ -58,13 +58,14 @@
             <div class="card-header text-center">
                 <h2>{{ $unitTestSuitName }}</h2>
                 <div style="font-size: small">
-                    Tests: <b>{{ $unitTestSuit['tests'] }}</b>
-                    Assertions: <b>{{ $unitTestSuit['assertions'] }}</b>
-                    Errors: <b @if($unitTestSuit['errors']) style="color: red;" @endif>{{ $unitTestSuit['errors'] }}</b>
+                    Tests: <b>{{ $unitTestSuit['tests'] ?? 0}}</b>
+                    Assertions: <b>{{ $unitTestSuit['assertions'] ?? 0 }}</b>
+                    Errors: <b
+                        @if($unitTestSuit['errors'] ?? 0) style="color: red;" @endif>{{ $unitTestSuit['errors'] ?? 0 }}</b>
                     Failures: <b
-                        @if($unitTestSuit['failures']) style="color: red;" @endif>{{ $unitTestSuit['failures'] }}</b>
-                    Skipped: <b>{{ $unitTestSuit['skipped'] }}</b>
-                    Time: <b>{{ round($unitTestSuit['time'],2) }}</b>
+                        @if($unitTestSuit['failures'] ?? 0) style="color: red;" @endif>{{ $unitTestSuit['failures'] ?? 0 }}</b>
+                    Skipped: <b>{{ $unitTestSuit['skipped'] ?? 0 }}</b>
+                    Time: <b>{{ round($unitTestSuit['time'] ?? 0,2) }}</b>
                 </div>
             </div>
 
@@ -78,30 +79,14 @@
                         <th>Time</th>
                     </tr>
 
-                    @php
-                        $collectKeyLast = '';
-                    @endphp
-
-                    @foreach($unitTestSuit['collect'] as $collectKey => $collect)
-
-                        @if($collectKey != $collectKeyLast)
-                            <tr>
-                                <td colspan="5" class="unitTestSuit--collect-row">{{ $collectKey }}</td>
-                            </tr>
-                            @php
-                                $collectKeyLast = $collectKey;
-                            @endphp
-                        @endif
-
-                        @foreach($collect['entries'] as $entry)
-                            <tr>
-                                <td class="unitTestSuit--entry-name">{{ $entry['name'] }}</td>
-                                <td class="unitTestSuit--entry-assertions">{{ $entry['assertions'] }}</td>
-                                <td class="unitTestSuit--entry-error">{{ $entry['error'] ?? '?' }}</td>
-                                <td class="unitTestSuit--entry-failure">{{ $entry['failure'] ?? '?' }}</td>
-                                <td class="unitTestSuit--entry-time">{{ round($entry['time'],2) }} sec.</td>
-                            </tr>
-                        @endforeach
+                    @foreach($unitTestSuit['entries'] as $entry)
+                        <tr>
+                            <td class="unitTestSuit--entry-name">{{ $entry['name'] }}</td>
+                            <td class="unitTestSuit--entry-assertions">{{ $entry['assertions'] }}</td>
+                            <td class="unitTestSuit--entry-error">{{ $entry['error'] ?? '?' }}</td>
+                            <td class="unitTestSuit--entry-failure">{{ $entry['failure'] ?? '?' }}</td>
+                            <td class="unitTestSuit--entry-time">{{ round($entry['time'],2) }} sec.</td>
+                        </tr>
                     @endforeach
 
                 </table>
