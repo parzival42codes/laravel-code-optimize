@@ -41,9 +41,6 @@ class Unittest
                                 $testArray = json_decode($json, true);
 
                                 if ($testArray) {
-
-                                    d($testArray);
-
                                     $this->testStats = [
                                         'name' => $testArray['testsuite']['@attributes']['name'] ?? '',
                                         'tests' => $testArray['testsuite']['@attributes']['tests'] ?? 0,
@@ -105,6 +102,8 @@ class Unittest
                 } else {
                     $this->testcase($testsuite['testsuite']);
                 }
+            } elseif (isset($testsuite['testcase'])) {
+                $this->testcase($testsuite);
             }
         } else {
             foreach ($testsuite as $testsuiteItem) {
