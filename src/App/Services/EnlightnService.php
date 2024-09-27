@@ -27,7 +27,7 @@ class EnlightnService
 
                 foreach ($matches as $matchKey => $match) {
                     $enlightnTable[$matchKey] = [
-                        'message' => ($match[1] ?? ''),
+                        'message' => $match[1],
                     ];
 
                     $enlightnTable[$matchKey]['status'] = '';

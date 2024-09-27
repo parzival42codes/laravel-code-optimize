@@ -72,7 +72,7 @@ class Unittest
         ]));
     }
 
-    private function testsuite(array $testsuite)
+    private function testsuite(array $testsuite): void
     {
         if (isset($testsuite['@attributes']['name'])) {
             if (isset($testsuite['testsuite'])) {
@@ -112,7 +112,7 @@ class Unittest
         }
     }
 
-    private function testcase(array $testcase)
+    private function testcase(array $testcase): void
     {
         $name = $testcase['@attributes']['name'];
 
@@ -135,7 +135,7 @@ class Unittest
         ]);
     }
 
-    private function checkName(string $name, array $attributes = [])
+    private function checkName(string $name, array $attributes = []): void
     {
         if (! isset($this->unitTestSuits[$name])) {
             $this->unitTestSuits[$name] = $attributes;
