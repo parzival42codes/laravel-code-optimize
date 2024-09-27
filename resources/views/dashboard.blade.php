@@ -46,11 +46,7 @@
                 role="tab" aria-controls="failedJobs" aria-selected="false">Failed Queue Jobs
         </button>
     </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="codeVersion-tab" data-bs-toggle="tab" data-bs-target="#codeVersion" type="button"
-                role="tab" aria-controls="codeVersion" aria-selected="false">Code Version
-        </button>
-    </li>
+
 </ul>
 
 <div class="tab-content" id="laravel-code-optimize-content">
@@ -80,9 +76,6 @@
     </div>
     <div class="tab-pane" id="failedJobs" role="tabpanel" aria-labelledby="failedJobs-tab">
         {!! $failedJobs !!}
-    </div>
-    <div class="tab-pane" id="codeVersion" role="tabpanel" aria-labelledby="codeVersion-tab">
-        {!! $codeVersion !!}
     </div>
 </div>
 
