@@ -16,7 +16,5 @@ class LaravelCodeOptimizeServiceProvider extends PackageServiceProvider
         $package->name(self::PACKAGE_NAME)->hasRoute('route')->hasViews();
     }
 
-    public function registeringPackage(): void
-    {
-    }
+    public function registeringPackage(): void {}
 }

@@ -23,21 +23,38 @@ class EnlightnService
             $contentFile = $storageDisk->get($path);
 
             if ($contentFile) {
-                preg_match_all('!Check (.*?)\n!si', $contentFile, $matches, PREG_SET_ORDER);
+                preg_match_all('!Check (.*?)(?=Check|\.html)!si', $contentFile, $matches, PREG_SET_ORDER);
 
                 foreach ($matches as $matchKey => $match) {
-                    $enlightnTable[$matchKey] = [
-                        'message' => $match[1],
-                    ];
+                    $message = trim($match[1]);
 
                     $enlightnTable[$matchKey]['status'] = '';
+
+                    if (str_contains($match[0], 'Passed')) {
+                        $enlightnTable[$matchKey]['status'] = 'Passed';
+                    }
                     if (str_contains($match[0], 'Not Applicable')) {
                         $enlightnTable[$matchKey]['status'] = 'Not Applicable';
-                    } elseif (str_contains($match[0], 'Passed')) {
-                        $enlightnTable[$matchKey]['status'] = 'Passed';
                     }
                     if (str_contains($match[0], 'Failed')) {
                         $enlightnTable[$matchKey]['status'] = 'Failed';
+                    }
+                    if (str_contains($match[0], 'Exception')) {
+                        $enlightnTable[$matchKey]['status'] = 'Exception';
+                    }
+
+                    if (str_contains($match[0], 'Documentation URL:')) {
+                        $message = preg_replace('!Documentation URL:(.*)!si',
+                            'Documentation URL: <a href="${1}.html" target="_blank">${1}.html</a>', $message);
+                    }
+
+                    if ($message) {
+                        $enlightnTable[$matchKey]['message'] = strtr($message, [
+                            'Not Applicable' => '',
+                            'Passed' => '',
+                            'Failed' => '',
+                            'Exception' => '',
+                        ]);
                     }
                 }
             }

@@ -53,17 +53,17 @@
         </div>
     </div>
 
-    @foreach($unitTestSuits as $unitTestSuitName => $unitTestSuit)
+    @foreach ($unitTestSuits as $unitTestSuitName => $unitTestSuit)
         <div class="card">
             <div class="card-header text-center">
                 <h2>{{ $unitTestSuitName }}</h2>
                 <div style="font-size: small">
-                    Tests: <b>{{ $unitTestSuit['tests'] ?? 0}}</b>
+                    Tests: <b>{{ $unitTestSuit['tests'] ?? 0 }}</b>
                     Assertions: <b>{{ $unitTestSuit['assertions'] ?? 0 }}</b>
                     Errors: <b
-                        @if($unitTestSuit['errors'] ?? 0) style="color: red;" @endif>{{ $unitTestSuit['errors'] ?? 0 }}</b>
+                        @if ($unitTestSuit['errors'] ?? 0) style="color: red;" @endif>{{ $unitTestSuit['errors'] ?? 0 }}</b>
                     Failures: <b
-                        @if($unitTestSuit['failures'] ?? 0) style="color: red;" @endif>{{ $unitTestSuit['failures'] ?? 0 }}</b>
+                        @if ($unitTestSuit['failures'] ?? 0) style="color: red;" @endif>{{ $unitTestSuit['failures'] ?? 0 }}</b>
                     Skipped: <b>{{ $unitTestSuit['skipped'] ?? 0 }}</b>
                     Time: <b>{{ round($unitTestSuit['time'] ?? 0,2) }}</b>
                 </div>
@@ -79,7 +79,7 @@
                         <th>Time</th>
                     </tr>
 
-                    @foreach($unitTestSuit['entries'] as $entry)
+                    @foreach ($unitTestSuit['entries'] as $entry)
                         <tr>
                             <td class="unitTestSuit--entry-name">{{ $entry['name'] }}</td>
                             <td class="unitTestSuit--entry-assertions">{{ $entry['assertions'] }}</td>

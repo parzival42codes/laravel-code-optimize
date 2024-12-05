@@ -9,6 +9,7 @@ use parzival42codes\LaravelCodeOptimize\App\Services\EnlightnService;
 use parzival42codes\LaravelCodeOptimize\App\Services\FailedJobService;
 use parzival42codes\LaravelCodeOptimize\App\Services\JobService;
 use parzival42codes\LaravelCodeOptimize\App\Services\Leasot;
+use parzival42codes\LaravelCodeOptimize\App\Services\MissingDoc;
 use parzival42codes\LaravelCodeOptimize\App\Services\PhpCsService;
 use parzival42codes\LaravelCodeOptimize\App\Services\PhpInsights;
 use parzival42codes\LaravelCodeOptimize\App\Services\PhpMd;
@@ -29,6 +30,7 @@ class DashboardController extends Controller
         $phpcs = App::make(PhpCsService::class)->dispatch();
         $enlightn = App::make(EnlightnService::class)->dispatch();
         $leasot = App::make(Leasot::class)->dispatch();
+        $missingdoc = App::make(MissingDoc::class)->dispatch();
         $jobs = App::make(JobService::class)->dispatch();
         $failedJobs = App::make(FailedJobService::class)->dispatch();
 
@@ -40,6 +42,7 @@ class DashboardController extends Controller
             'phpInsights',
             'enlightn',
             'leasot',
+            'missingdoc',
             'jobs',
             'failedJobs',
         ]));

@@ -37,6 +37,11 @@
         </button>
     </li>
     <li class="nav-item" role="presentation">
+        <button class="nav-link" id="leasot-missingdoc" data-bs-toggle="tab" data-bs-target="#missingdoc" type="button"
+                role="tab" aria-controls="leasot" aria-selected="false">Missing Doc
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
         <button class="nav-link" id="jobs-tab" data-bs-toggle="tab" data-bs-target="#jobs" type="button"
                 role="tab" aria-controls="jobs" aria-selected="false">Queue Jobs
         </button>
@@ -70,6 +75,9 @@
     </div>
     <div class="tab-pane" id="leasot" role="tabpanel" aria-labelledby="leasot-tab">
         {!! $leasot !!}
+    </div>
+    <div class="tab-pane" id="missingdoc" role="tabpanel" aria-labelledby="leasot-missingdoc">
+        {!! $missingdoc !!}
     </div>
     <div class="tab-pane" id="jobs" role="tabpanel" aria-labelledby="jobs-tab">
         {!! $jobs !!}
