@@ -10,8 +10,11 @@ use Spatie\StructureDiscoverer\Discover;
 class MissingDoc
 {
     private array $missingDoc = [];
+
     private int $missingDocClassCounter = 0;
+
     private int $missingDocPropertyCounter = 0;
+
     private int $missingDocMethodCounter = 0;
 
     /**
@@ -45,7 +48,7 @@ class MissingDoc
         $missingDocCounter = count($missingDoc);
         $missingDocClassCounter = $this->missingDocClassCounter;
         $missingDocPropertyCounter = $this->missingDocPropertyCounter;
-        $missingDocMethodCounter=  $this->missingDocMethodCounter;
+        $missingDocMethodCounter = $this->missingDocMethodCounter;
 
         return view('code-optimize::missingDoc', compact([
             'missingDoc',
@@ -60,29 +63,32 @@ class MissingDoc
     {
         /** @var ReflectionProperty $property */
         foreach ($properties as $property) {
-            $this->missingDocPropertyCounter++;
-            $prefix = [];
+            $propertyComment = $property->getDocComment();
+            if (! $propertyComment) {
+                $this->missingDocPropertyCounter++;
+                $prefix = [];
 
-            if ($property->isPrivate()) {
-                $prefix = 'private';
-            }
-            if ($property->isProtected()) {
-                $prefix = 'protected';
-            }
-            if ($property->isPublic()) {
-                $prefix = 'public';
-            }
+                if ($property->isPrivate()) {
+                    $prefix = 'private';
+                }
+                if ($property->isProtected()) {
+                    $prefix = 'protected';
+                }
+                if ($property->isPublic()) {
+                    $prefix = 'public';
+                }
 
-            if ($property->isStatic()) {
-                $prefix .= ' static';
-            }
+                if ($property->isStatic()) {
+                    $prefix .= ' static';
+                }
 
-            $this->missingDoc[] = [
-                'name' => $reflectionClassName,
-                'method' => $prefix.' '.$property->getType().' $'.$property->getName(),
-                'lineStart' => '',
-                'lineEnd' => '',
-            ];
+                $this->missingDoc[] = [
+                    'name' => $reflectionClassName,
+                    'method' => $prefix.' '.$property->getType().' $'.$property->getName(),
+                    'lineStart' => '',
+                    'lineEnd' => '',
+                ];
+            }
         }
     }
 
@@ -91,10 +97,10 @@ class MissingDoc
         $reflectionClassMethods = $reflectionClass->getMethods();
 
         foreach ($reflectionClassMethods as $reflectionClassMethod) {
-            $this->missingDocMethodCounter++;
-
             $reflectionClassMethodComment = $reflectionClassMethod->getDocComment();
             if (! $reflectionClassMethodComment) {
+                $this->missingDocMethodCounter++;
+
                 if (str_contains(
                     $reflectionClassMethod->class,
                     'Symfony\\'
