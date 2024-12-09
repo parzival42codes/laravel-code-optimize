@@ -25,8 +25,6 @@ class MissingDoc
         $discoverClass = Discover::in(app_path())->classes()->get();
 
         foreach ($discoverClass as $discover) {
-            $this->missingDocClassCounter++;
-
             $reflectionClass = new ReflectionClass($discover);
 
             $classDoc = $reflectionClass->getDocComment();
@@ -35,6 +33,8 @@ class MissingDoc
                     continue;
                 }
             }
+
+            $this->missingDocClassCounter++;
 
             $properties = $reflectionClass->getProperties();
             if ($properties) {
