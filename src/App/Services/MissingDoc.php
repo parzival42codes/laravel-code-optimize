@@ -26,6 +26,13 @@ class MissingDoc
 
             $reflectionClass = new ReflectionClass($discover);
 
+            $classDoc = $reflectionClass->getDocComment();
+            if ($classDoc) {
+                if (str_contains($classDoc, '@missingDoc ignore')) {
+                    continue;
+                }
+            }
+
             $properties = $reflectionClass->getProperties();
             if ($properties) {
                 $this->missingDocProperties($properties, $reflectionClass->name);
