@@ -34,14 +34,22 @@ class MissingDoc
                 }
             }
 
-            $this->missingDocClassCounter++;
+            $hasMissingDoc = false;
 
             $properties = $reflectionClass->getProperties();
             if ($properties) {
-                $this->missingDocProperties($properties, $reflectionClass->name);
+                if ($this->missingDocProperties($properties, $reflectionClass->name)) {
+                    $hasMissingDoc = true;
+                }
             }
 
-            $this->missingDocMethods($reflectionClass);
+            if ($this->missingDocMethods($reflectionClass)) {
+                $hasMissingDoc = true;
+            }
+
+            if ($hasMissingDoc) {
+                $this->missingDocClassCounter++;
+            }
         }
 
         $missingDoc = $this->missingDoc;
@@ -59,12 +67,15 @@ class MissingDoc
         ]));
     }
 
-    private function missingDocProperties(array $properties, string $reflectionClassName): void
+    private function missingDocProperties(array $properties, string $reflectionClassName): bool
     {
+        $hasMissingDoc = false;
         /** @var ReflectionProperty $property */
         foreach ($properties as $property) {
             $propertyComment = $property->getDocComment();
             if (! $propertyComment) {
+                $hasMissingDoc = true;
+
                 $this->missingDocPropertyCounter++;
                 $prefix = [];
 
@@ -90,15 +101,19 @@ class MissingDoc
                 ];
             }
         }
+
+        return $hasMissingDoc;
     }
 
-    private function missingDocMethods($reflectionClass): void
+    private function missingDocMethods($reflectionClass): bool
     {
         $reflectionClassMethods = $reflectionClass->getMethods();
+        $hasMissingDoc = false;
 
         foreach ($reflectionClassMethods as $reflectionClassMethod) {
             $reflectionClassMethodComment = $reflectionClassMethod->getDocComment();
             if (! $reflectionClassMethodComment) {
+                $hasMissingDoc = true;
                 $this->missingDocMethodCounter++;
 
                 if (str_contains(
@@ -150,5 +165,7 @@ class MissingDoc
                 ];
             }
         }
+
+        return $hasMissingDoc;
     }
 }
