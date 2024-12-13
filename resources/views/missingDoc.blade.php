@@ -37,21 +37,25 @@
                     </th>
                 </tr>
 
-                @foreach ($missingDoc as $missing)
-                    <tr>
-                        <td>
-                            {{ $missing['name'] }}
-                        </td>
-                        <td>
-                            {{ $missing['method'] }}
-                        </td>
-                        <td>
-                            {{ $missing['lineStart'] }}
-                        </td>
-                        <td>
-                            {{ $missing['lineEnd'] }}
-                        </td>
-                    </tr>
+                @foreach ($missingDoc as $missingDocClass)
+                    @foreach ($missingDocClass as $missingType)
+                    @foreach ($missingType as $missing)
+                        <tr>
+                            <td>
+                                {{ $missing['name'] }}
+                            </td>
+                            <td>
+                                {{ $missing['method'] }}
+                            </td>
+                            <td>
+                                {{ $missing['lineStart'] }}
+                            </td>
+                            <td>
+                                {{ $missing['lineEnd'] }}
+                            </td>
+                        </tr>
+                    @endforeach
+                    @endforeach
                 @endforeach
 
             </table>

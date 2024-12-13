@@ -27,6 +27,12 @@ class MissingDoc
         foreach ($discoverClass as $discover) {
             $reflectionClass = new ReflectionClass($discover);
 
+            foreach (config('custom.missingDoc.classContains') as $classContain) {
+                if (str_contains($reflectionClass->name, $classContain)) {
+                    continue 2;
+                }
+            }
+
             $classDoc = $reflectionClass->getDocComment();
             if ($classDoc) {
                 if (str_contains($classDoc, '@missingDoc ignore')) {
@@ -51,6 +57,9 @@ class MissingDoc
                 $this->missingDocClassCounter++;
             }
         }
+
+//        d($this->missingDoc);
+//        die();
 
         $missingDoc = $this->missingDoc;
         $missingDocCounter = count($missingDoc);
@@ -93,9 +102,11 @@ class MissingDoc
                     $prefix .= ' static';
                 }
 
-                $this->missingDoc[] = [
+                $propertyName = $prefix.' '.$property->getType().' $'.$property->getName();
+
+                $this->missingDoc[$reflectionClassName]['property'][$propertyName] = [
                     'name' => $reflectionClassName,
-                    'method' => $prefix.' '.$property->getType().' $'.$property->getName(),
+                    'method' => $propertyName,
                     'lineStart' => '',
                     'lineEnd' => '',
                 ];
@@ -116,16 +127,8 @@ class MissingDoc
                 $hasMissingDoc = true;
                 $this->missingDocMethodCounter++;
 
-                if (str_contains(
-                    $reflectionClassMethod->class,
-                    'Symfony\\'
-                )
-                    || str_contains($reflectionClassMethod->class, 'App\\Console\\')
-                    || str_contains($reflectionClassMethod->name, 'testBox')
-                    || (str_contains(
-                        $reflectionClassMethod->class,
-                        'Request'
-                    ) && str_contains($reflectionClassMethod->name, 'rules'))
+                if (str_contains($reflectionClassMethod->name, 'testBox')
+                    || str_contains($reflectionClassMethod->name, 'rules')
                 ) {
                     continue;
                 }
@@ -157,9 +160,11 @@ class MissingDoc
                     $methodParameter = ' ('.implode(', ', $methodParameterCollect).')';
                 }
 
-                $this->missingDoc[] = [
+                $method = $prefix.' function '.$reflectionClassMethod->name.$methodParameter;
+
+                $this->missingDoc[$reflectionClassMethod->class]['method'][$method] = [
                     'name' => $reflectionClassMethod->class,
-                    'method' => $prefix.' function '.$reflectionClassMethod->name.$methodParameter,
+                    'method' => $method,
                     'lineStart' => $reflectionClassMethod->getStartLine(),
                     'lineEnd' => $reflectionClassMethod->getEndLine(),
                 ];
