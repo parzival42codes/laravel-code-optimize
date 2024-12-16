@@ -9,9 +9,9 @@ use Spatie\StructureDiscoverer\Discover;
 
 class MissingDoc
 {
-    private array $missingDoc = [];
+    private array $parentCache = [];
 
-    private int $missingDocClassCounter = 0;
+    private array $missingDoc = [];
 
     private int $missingDocPropertyCounter = 0;
 
@@ -40,32 +40,27 @@ class MissingDoc
                 }
             }
 
-            $hasMissingDoc = false;
+            $this->parentCache = [
+                'method' => [],
+                'property' => [],
+            ];
+            $this->findParentPropertyMethods($reflectionClass, true);
 
             $properties = $reflectionClass->getProperties();
             if ($properties) {
-                if ($this->missingDocProperties($properties, $reflectionClass->name)) {
-                    $hasMissingDoc = true;
-                }
+                $this->missingDocProperties($properties, $reflectionClass->name);
             }
 
-            if ($this->missingDocMethods($reflectionClass)) {
-                $hasMissingDoc = true;
-            }
-
-            if ($hasMissingDoc) {
-                $this->missingDocClassCounter++;
-            }
+            $this->missingDocMethods($reflectionClass);
         }
-
-//        d($this->missingDoc);
-//        die();
 
         $missingDoc = $this->missingDoc;
         $missingDocCounter = count($missingDoc);
-        $missingDocClassCounter = $this->missingDocClassCounter;
+        $missingDocClassCounter = count($this->missingDoc);
         $missingDocPropertyCounter = $this->missingDocPropertyCounter;
         $missingDocMethodCounter = $this->missingDocMethodCounter;
+
+        d($this->missingDoc);
 
         return view('code-optimize::missingDoc', compact([
             'missingDoc',
@@ -76,15 +71,26 @@ class MissingDoc
         ]));
     }
 
-    private function missingDocProperties(array $properties, string $reflectionClassName): bool
+    private function missingDocProperties(array $properties, string $reflectionClassName): void
     {
-        $hasMissingDoc = false;
         /** @var ReflectionProperty $property */
         foreach ($properties as $property) {
+            foreach (config('custom.missingDoc.classContains') as $classContain) {
+                if (str_contains($reflectionClassName, $classContain)) {
+                    return;
+                }
+            }
+
+            if ($property->class !== $reflectionClassName) {
+                return;
+            }
+
+            if (in_array($property->name, $this->parentCache['property'])) {
+                return;
+            }
+
             $propertyComment = $property->getDocComment();
             if (! $propertyComment) {
-                $hasMissingDoc = true;
-
                 $this->missingDocPropertyCounter++;
                 $prefix = [];
 
@@ -112,19 +118,35 @@ class MissingDoc
                 ];
             }
         }
-
-        return $hasMissingDoc;
     }
 
-    private function missingDocMethods($reflectionClass): bool
+    private function missingDocMethods(ReflectionClass $reflectionClass): void
     {
         $reflectionClassMethods = $reflectionClass->getMethods();
-        $hasMissingDoc = false;
 
         foreach ($reflectionClassMethods as $reflectionClassMethod) {
+            foreach (config('custom.missingDoc.classContains') as $classContain) {
+                if (str_contains($reflectionClassMethod->class, $classContain)) {
+                    return;
+                }
+            }
+
+            foreach (config('custom.missingDoc.methodContains') as $methodContain) {
+                if (str_contains($reflectionClassMethod->name, $methodContain)) {
+                    return;
+                }
+            }
+
+            if ($reflectionClassMethod->class !== $reflectionClass->getName()) {
+                return;
+            }
+
+            if (in_array($reflectionClassMethod->name, $this->parentCache['method'])) {
+                return;
+            }
+
             $reflectionClassMethodComment = $reflectionClassMethod->getDocComment();
             if (! $reflectionClassMethodComment) {
-                $hasMissingDoc = true;
                 $this->missingDocMethodCounter++;
 
                 if (str_contains($reflectionClassMethod->name, 'testBox')
@@ -170,7 +192,37 @@ class MissingDoc
                 ];
             }
         }
+    }
 
-        return $hasMissingDoc;
+    public function findParentPropertyMethods(ReflectionClass $reflectionClass, bool $firstCall = false): void
+    {
+        if (! $firstCall) {
+            $methods = $reflectionClass->getMethods();
+            if ($methods) {
+                foreach ($methods as $method) {
+                    $this->parentCache['method'][] = $method->getName();
+                }
+            }
+
+            $properties = $reflectionClass->getProperties();
+            if ($properties) {
+                foreach ($properties as $property) {
+                    $this->parentCache['property'][] = $property->getName();
+                }
+            }
+        }
+
+        $interfaces = $reflectionClass->getInterfaces();
+        $parentClass = $reflectionClass->getParentClass();
+
+        if ($interfaces) {
+            foreach ($interfaces as $interface) {
+                $this->findParentPropertyMethods($interface);
+            }
+        }
+
+        if ($parentClass) {
+            $this->findParentPropertyMethods($parentClass);
+        }
     }
 }
