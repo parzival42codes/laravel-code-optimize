@@ -60,8 +60,6 @@ class MissingDoc
         $missingDocPropertyCounter = $this->missingDocPropertyCounter;
         $missingDocMethodCounter = $this->missingDocMethodCounter;
 
-        d($this->missingDoc);
-
         return view('code-optimize::missingDoc', compact([
             'missingDoc',
             'missingDocCounter',
